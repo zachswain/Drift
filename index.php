@@ -28,6 +28,8 @@ header("Pragma: no-cache");
 <script src="js/Drift/Sectors.js" type="text/javascript"></script>
 <script src="js/Drift/Ports.js" type="text/javascript"></script>
 <script src="js/Drift/Planets.js" type="text/javascript"></script>
+<script src="js/Drift/Globals.js" type="text/javascript"></script>
+<script src="js/Drift/Utils.js" type="text/javascript"></script>
 <script src="js/Drift/Views/MainStatsView.js" type="text/javascript"></script>
 <script src="js/Drift/Views/ResourcesContentPaneView.js" type="text/javascript"></script>
 <script src="js/Drift/Views/ShipContentPaneView.js" type="text/javascript"></script>
@@ -65,6 +67,11 @@ header("Pragma: no-cache");
             </td>
             <td>
             O: <span data-role="oreSpan">0</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            Credits: <span data-role="creditsSpan"><%= model.credits %></span>
             </td>
         </tr>
         <tr>
@@ -127,6 +134,30 @@ header("Pragma: no-cache");
 <script type="text/template" id="Drift-PortView-template">
     <div>
     Port: <span data-role="portIdSpan"><%= port.id %></span>
+    </div>
+    <div>
+        <button class="Button" data-role="dockBtn" <%= (dockBtnDisabled ? "disabled" : "") %>>Dock</button>
+        <button class="Button" data-role="launchBtn" <%= (launchBtnDisabled ? "disabled" : "") %>>Launch</button>
+    </div>
+    <div data-role='informationDiv' class='Hidden'>
+    Information
+    </div>
+    <div data-role='resourcesDiv' class='Hidden'>
+        <u>Resources</u>
+        <table class="ResourcesTable" data-role="resourcesTable">
+            <thead>
+                <tr>
+                    <th>Resource</th>
+                    <th>Units</th>
+                    <th>Buy Price</th>
+                    <th></th>
+                    <th>Sell Price</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
     </div>
 </script>
 

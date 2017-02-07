@@ -6,7 +6,7 @@
                 PlanetModel : Backbone.Model.extend({
                     defaults : {
                         id : null,
-                        sector : null,
+                        sectorId : null,
                         resources : []
                     },
                     
@@ -60,6 +60,14 @@
                         } else {
                             return null;
                         }
+                    },
+                    
+                    getId : function() {
+                        return this.get("id");
+                    },
+                    
+                    getSectorId : function() {
+                        return this.get("sectorId");
                     }
                 })
             }

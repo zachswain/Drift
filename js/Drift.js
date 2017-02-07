@@ -32,11 +32,12 @@
                 
                 this.player.set({
                     name : "Spaceman Spiff",
-                    sector : 1,
-                    port : null,
-                    planet : null
+                    sectorId : 1,
+                    portId : null,
+                    planetId : null,
+                    credits : 100
                 });
-                this.setSector(Drift.Sectors[1]);
+                this.setSector(1);
                 
                 this.ship.attachModule(new Drift.ShipModules.CargoBay());
                 this.ship.attachModule(new Drift.ShipModules.CargoBay());
@@ -69,16 +70,16 @@
                 }, 1000);
             },
             
-            setSector : function(sector) {
-                this.sector = sector;
+            setSector : function(sectorId) {
+                this.player.setSectorId(sectorId);
+                this.sector = Drift.Sectors[sectorId];
                 this.trigger("change:sector", this.sector);
             },
             
-            orbit : function(planet) {
-                if( this.player.inSector(planet.get("sector")) && !this.player.isOrbitingPlanet() && !this.player.isDockedInPort() ) {
-                    this.player.set({
-                        planet : planet
-                    });
+            orbit : function(planetId) {
+                var planet = Drift.Planets[planetId];
+                if( this.player.inSector(planet.getSectorId()) && !this.player.isOrbitingPlanet() && !this.player.isDockedInPort() ) {
+                    this.player.setPlanetId(planet.getId());
                     this.planet = planet;
                     this.trigger("orbit", planet);
                     return true;
@@ -87,14 +88,37 @@
                 }
             },
             
-            deorbit : function(planet) {
-                if( this.player.inSector(planet.get("sector")) && this.player.isOrbitingPlanet(planet) ) {
+            deorbit : function(planetId) {
+                var planet = Drift.Planets[planetId];
+                if( this.player.inSector(planet.getSectorId()) && this.player.isOrbitingPlanet(planet.getId()) ) {
                     this.ship.deorbit(this.planet);
-                    this.player.set({
-                        planet : null
-                    });
+                    this.player.setPlanetId(null);
                     this.planet = null;
                     this.trigger("deorbit", planet);
+                    return true;
+                } else {
+                    return false;
+                }
+            },
+            
+            dock : function(portId) {
+                var port = Drift.Ports[portId];
+                
+                if( this.player.inSector(port.getSectorId()) && !this.player.isOrbitingPlanet() && !this.player.isDockedInPort() ) {
+                    this.player.setPortId(port.getId());
+                    this.trigger("dock", port);
+                    return true;
+                } else {
+                    return false;
+                }
+            },
+            
+            launch : function(portId) {
+                var port = Drift.Ports[portId];
+                
+                if( this.player.inSector(port.getSectorId()) && !this.player.isOrbitingPlanet() && this.player.isDockedInPort(port.getId()) ) {
+                    this.player.setPortId(null);
+                    this.trigger("launch", port);
                     return true;
                 } else {
                     return false;
@@ -111,6 +135,14 @@
             
             getPlanet : function() {
                 return this.planet;
+            },
+            
+            getSector : function() {
+                return this.sector;
+            },
+            
+            getPortById : function(id) {
+                return Drift.Ports[id];
             }
         }  
     });

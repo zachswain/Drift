@@ -24,10 +24,13 @@
                     initialize : function(parameters) {
                         this.planet = parameters.planet;
                         var ship = Drift.getShip();
+                        var player = Drift.getPlayer();
                         
                         this.listenTo(Drift, "change:sector", this.onSectorChange);
                         this.listenTo(Drift, "orbit", this.onOrbit);
                         this.listenTo(Drift, "deorbit", this.onDeorbit);
+                        this.listenTo(Drift, "dock", this.onDock);
+                        this.listenTo(Drift, "launch", this.onLaunch);
                         this.listenTo(ship, "change:deployedBots:" + Drift.Bots.PlanetaryMiners, this.onPlanetaryMinersDeployedChanged);
                         this.listenTo(ship, "change:bots:" + Drift.Bots.PlanetaryMiners, this.onPlanetaryMinersChanged);
                         this.listenTo(this.planet, "change:resource:" + Drift.Resources.Ore, this.onOreChanged);
@@ -37,7 +40,12 @@
                         var player = Drift.getPlayer();
                         var ship = Drift.getShip();
                         var template = _.template( $("#Drift-PlanetView-template").html() );
-                        var html = template({ planet : this.planet.toJSON(), orbitBtnDisabled : player.isOrbitingPlanet(), deorbitBtnDisabled : player.isOrbitingPlanet(this.planet), ship : ship.toJSON() });
+                        var html = template({ 
+                            planet : this.planet.toJSON(), 
+                            orbitBtnDisabled : player.isOrbitingPlanet(),
+                            deorbitBtnDisabled : player.isOrbitingPlanet(this.planet), 
+                            ship : ship.toJSON()
+                        });
                         this.$el.html(html);
                         
                         var self=this;
@@ -79,12 +87,12 @@
                     
                     onOrbitBtnClicked : function(e) {
                         e.preventDefault();
-                        Drift.orbit(this.planet);
+                        Drift.orbit(this.planet.getId());
                     },
                     
                     onDeorbitBtnClicked : function(e) {
                         e.preventDefault();
-                        Drift.deorbit(this.planet);
+                        Drift.deorbit(this.planet.getId());
                     },
                     
                     onSectorChange : function(sector) {
@@ -93,10 +101,10 @@
                     updateOrbitButtons : function() {
                         var player = Drift.getPlayer();
                         
-                        if( player.isOrbitingPlanet(this.planet) ) {
+                        if( player.isOrbitingPlanet(this.planet.getId()) ) {
                             this.$el.find("[data-role=orbitBtn]").attr("disabled", "disabled").addClass("Disabled");
                             this.$el.find("[data-role=deorbitBtn]").removeAttr("disabled").removeClass("Disabled");
-                        } else if( player.isOrbitingPlanet() ) {
+                        } else if( player.isOrbitingPlanet() || player.isDockedInPort() ) {
                             this.$el.find("[data-role=orbitBtn]").attr("disabled", "disabled").addClass("Disabled");
                             this.$el.find("[data-role=deorbitBtn]").attr("disabled", "disabled").addClass("Disabled");
                         } else {
@@ -145,6 +153,14 @@
                         this.$el.find("[data-role=unassignBtn][data-type=" + Drift.Bots.PlanetaryMiners + "]").attr("disabled", "disabled").addClass("Disabled");
                         this.$el.find("[data-role=assignAllBtn][data-type=" + Drift.Bots.PlanetaryMiners + "]").attr("disabled", "disabled").addClass("Disabled");
                         this.$el.find("[data-role=assignBtn][data-type=" + Drift.Bots.PlanetaryMiners + "]").attr("disabled", "disabled").addClass("Disabled");
+                    },
+                    
+                    onDock : function(port) {
+                        this.updateOrbitButtons();
+                    },
+                    
+                    onLaunch : function(port) {
+                        this.updateOrbitButtons();
                     },
                     
                     onUnassignAllBtnClicked : function(e) {
@@ -201,7 +217,7 @@
                     
                     onOreChanged : function(amount) {
                         this.$el.find("[data-type=" + Drift.Resources.Ore + "] [data-role=amount]").html( numeral(amount).format("0,0.0"));
-                    }
+                    },
                 })
             }
         }    

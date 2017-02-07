@@ -8,13 +8,15 @@
                     
                     initialize : function(parameters) {
                         this.model = parameters.model;
-                        this.ship = parameters.ship;
+                        this.ship = Drift.getShip();
+                        this.player = Drift.getPlayer();
                         
                         this.listenTo(this.ship, "change:resource:" + Drift.Resources.Scrap, this.onScrapChange);
                         this.listenTo(this.ship, "change:resource:" + Drift.Resources.Ore, this.onOreChange);
                         this.listenTo(this.ship, "attach:module", this.onAttachModule);
                         this.listenTo(this.ship, "change:resources", this.onResourcesChange);
                         this.listenTo(this.model, "change:ticks", this.onTicksChange);
+                        this.listenTo(this.player, "change:credits", this.onCreditsChange);
                     },
                     
                     render : function() {
@@ -27,6 +29,7 @@
                     
                     updateView : function() {
                         this.updateTotalCargoHolds();
+                        this.updateCredits();
                     },
                     
                     onCurrentEnergyChange : function() {
@@ -59,6 +62,14 @@
                     
                     onResourcesChange : function() {
                         this.updateOccupiedCargoHolds();
+                    },
+                    
+                    onCreditsChange : function() {
+                        this.updateCredits();  
+                    },
+                    
+                    updateCredits : function() {
+                        this.$el.find("[data-role=creditsSpan]").html(this.player.getCredits());
                     },
                     
                     updateOccupiedCargoHolds : function() {

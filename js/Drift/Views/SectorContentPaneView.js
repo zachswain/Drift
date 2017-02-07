@@ -36,7 +36,7 @@
                             self.views.PlanetsContentPaneView.render();
                             self.$el.find("[data-role=sectorLocationTabContent]").append(self.views.PlanetsContentPaneView.$el);
                             
-                            self.showPlanetsTab();
+                            self.showPortsTab();
                         }, 0);
                     },
                     

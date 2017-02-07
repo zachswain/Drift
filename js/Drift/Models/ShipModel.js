@@ -6,6 +6,8 @@
                 ShipModel : Backbone.Model.extend({
                     defaults : {
                         name : "Golden Gopher",
+                        owner : null,
+                        pilot : null,
                         bots : {},
                         deployedBots : {},
                         resources : {},
@@ -43,6 +45,13 @@
                         return r;
                     },
                     
+                    getWholeNumberResource : function(resource) {
+                        var resources = this.get("resources");
+                        var r = new BigNumber(resources[resource]==undefined ? 0 : resources[resource]);
+                        
+                        return r;
+                    },
+                    
                     addResources : function(resource, amount) {
                         if( this.getUnoccupiedCargoHolds()==0 ) return 0;
 
@@ -65,6 +74,7 @@
                     hasResources : function(resource, amount) {
                         var resources = this.get("resources");
                         var r = (resources[resource]==undefined ? 0 : resources[resource]);
+                        //console.log("r=" + r + ", amount=" + amount);
                         if( r >= amount ) {
                             return true;
                         } else {
@@ -81,6 +91,7 @@
                             this.set({
                                 resources : resources
                             });
+                            this.trigger("change:resources");
                             this.trigger("change:resource:" + resource, resources);
                             return true;
                         } else {
@@ -298,6 +309,7 @@
                         var resources = this.get("resources");
                         $.each(resources, function(index, resource) {
                             count+=Math.floor(resource);
+                            //count.plus(new BigNumber(resource).floor());
                         });
                         return count;
                     },
@@ -330,20 +342,21 @@
                     tick : function() {
                         this.trigger("before:tick");
                         
-                        var sector = Drift.sector;
+                        var sector = Drift.getSector();
+                        var player = Drift.getPlayer();
+                        var planet = Drift.getPlanet();
                         
                         // Process scrap
-                        var scrapCollectorBots = this.getBotCount(Drift.Bots.ScrapCollectors);
-                        
-                        var rate = scrapCollectorBots;
-                        var scrap = sector.harvest(Drift.Resources.Scrap, rate);
-                        if( scrap > 0 ) {
-                            this.addResources(Drift.Resources.Scrap, scrap);
+                        if( !player.isDockedInPort() && !player.isOrbitingPlanet() ) {
+                            var scrapCollectorBots = this.getBotCount(Drift.Bots.ScrapCollectors);
+                            var rate = scrapCollectorBots;
+                            var scrap = sector.harvest(Drift.Resources.Scrap, rate);
+                            if( scrap > 0 ) {
+                                this.addResources(Drift.Resources.Scrap, scrap);
+                            }
                         }
                         
                         // Process planetary miners
-                        var player = Drift.getPlayer();
-                        var planet = Drift.getPlanet();
                         var planetaryMiners = this.getDeployedBotCount(Drift.Bots.PlanetaryMiners);
                         if( player.isOrbitingPlanet() && planetaryMiners>0 ) {
                             if( planet ) {
