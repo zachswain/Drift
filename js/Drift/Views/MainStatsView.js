@@ -1,4 +1,4 @@
-/* global Drift, jQuery, numeral */
+/* global _, Backbone, Drift, jQuery, numeral */
 (function($) {
     $.extend(true, window, {
         Drift : {

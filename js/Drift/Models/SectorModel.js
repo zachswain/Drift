@@ -6,12 +6,26 @@
                 SectorModel : Backbone.Model.extend({
                     defaults : {
                         id : null,
+                        x : null,
+                        y : null,
                         ports : [],
                         planets : [],
                         resources : {}
                     },
                     
                     initialize : function() {
+                    },
+                    
+                    getId : function() {
+                        return this.get("id");
+                    },
+                    
+                    getX : function() {
+                        return this.get("x");
+                    },
+                    
+                    getY : function() {
+                        return this.get("y");
                     },
                     
                     getPorts : function() {
@@ -83,6 +97,14 @@
                         } else {
                             return null;
                         }
+                    },
+                    
+                    getNeighbor : function(direction) {
+                        x = this.get("x");
+                        y = this.get("y");
+                        x += direction.x;
+                        y += direction.y;
+                        return Drift.getSectorAt(x, y);
                     }
                 })
             }

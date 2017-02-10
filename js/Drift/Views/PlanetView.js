@@ -122,29 +122,39 @@
                             this.$el.find(this.selectors.ResourcesDiv).show();
                             
                             if( ship.getBotCount(Drift.Bots.PlanetaryMiners)>0 ) {
-                                if( ship.getDeployedBotCount(Drift.Bots.PlanetaryMiners)>0 ) {
-                                    this.$el.find("[data-role=unassignAllBtn][data-type=" + Drift.Bots.PlanetaryMiners + "]").removeAttr("disabled").removeClass("Disabled");
-                                    this.$el.find("[data-role=unassignBtn][data-type=" + Drift.Bots.PlanetaryMiners + "]").removeAttr("disabled").removeClass("Disable");
-                                } else {
-                                    this.$el.find("[data-role=unassignAllBtn][data-type=" + Drift.Bots.PlanetaryMiners + "]").attr("disabled", "disabled").addClass("Disabled");
-                                    this.$el.find("[data-role=unassignBtn][data-type=" + Drift.Bots.PlanetaryMiners + "]").attr("disabled", "disabled").addClass("Disabled");
-                                }
-                                
-                                if( ship.getDeployedBotCount(Drift.Bots.PlanetaryMiners) < ship.getBotCount(Drift.Bots.PlanetaryMiners) ) {
-                                    this.$el.find("[data-role=assignAllBtn][data-type=" + Drift.Bots.PlanetaryMiners + "]").removeAttr("disabled").removeClass("Disabled");
-                                    this.$el.find("[data-role=assignBtn][data-type=" + Drift.Bots.PlanetaryMiners + "]").removeAttr("disabled").removeClass("Disable");
-                                } else {
-                                    this.$el.find("[data-role=assignAllBtn][data-type=" + Drift.Bots.PlanetaryMiners + "]").attr("disabled", "disabled").addClass("Disabled");
-                                    this.$el.find("[data-role=assignBtn][data-type=" + Drift.Bots.PlanetaryMiners + "]").attr("disabled", "disabled").addClass("Disabled");
-                                }
+                                this.updatePlanetaryMiners();
                             } else {
                                 this.$el.find("[data-type=" + Drift.Bots.PlanetaryMiners + "]").attr("disabled", "disabled").addClass("Disabled");
                             }
+                        } else {
+                            this.$el.hide();
                         }
+                    },
+                    
+                    updatePlanetaryMiners : function() {
+                        var ship = Drift.getShip();
+                        
+                        if( ship.getDeployedBotCount(Drift.Bots.PlanetaryMiners)>0 ) {
+                            this.$el.find("[data-role=unassignAllBtn][data-type=" + Drift.Bots.PlanetaryMiners + "]").removeAttr("disabled").removeClass("Disabled");
+                            this.$el.find("[data-role=unassignBtn][data-type=" + Drift.Bots.PlanetaryMiners + "]").removeAttr("disabled").removeClass("Disable");
+                        } else {
+                            this.$el.find("[data-role=unassignAllBtn][data-type=" + Drift.Bots.PlanetaryMiners + "]").attr("disabled", "disabled").addClass("Disabled");
+                            this.$el.find("[data-role=unassignBtn][data-type=" + Drift.Bots.PlanetaryMiners + "]").attr("disabled", "disabled").addClass("Disabled");
+                        }
+                        
+                        if( ship.getDeployedBotCount(Drift.Bots.PlanetaryMiners) < ship.getBotCount(Drift.Bots.PlanetaryMiners) ) {
+                            this.$el.find("[data-role=assignAllBtn][data-type=" + Drift.Bots.PlanetaryMiners + "]").removeAttr("disabled").removeClass("Disabled");
+                            this.$el.find("[data-role=assignBtn][data-type=" + Drift.Bots.PlanetaryMiners + "]").removeAttr("disabled").removeClass("Disable");
+                        } else {
+                            this.$el.find("[data-role=assignAllBtn][data-type=" + Drift.Bots.PlanetaryMiners + "]").attr("disabled", "disabled").addClass("Disabled");
+                            this.$el.find("[data-role=assignBtn][data-type=" + Drift.Bots.PlanetaryMiners + "]").attr("disabled", "disabled").addClass("Disabled");
+                        }  
                     },
                     
                     onDeorbit : function(planet) {
                         this.updateOrbitButtons();
+                        
+                        this.$el.show();
                         
                         this.$el.find(this.selectors.ActionsDiv).hide();
                         this.$el.find(this.selectors.ResourcesDiv).hide();
@@ -213,6 +223,8 @@
                         if( deployed>available ) {
                             ship.undeployBots(Drift.Bots.PlanetaryMiners, deployed-available);
                         }
+                        
+                        this.updatePlanetaryMiners();
                     },
                     
                     onOreChanged : function(amount) {

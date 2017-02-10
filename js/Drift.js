@@ -32,12 +32,12 @@
                 
                 this.player.set({
                     name : "Spaceman Spiff",
-                    sectorId : 1,
+                    sectorId : "0,0",
                     portId : null,
                     planetId : null,
                     credits : 100
                 });
-                this.setSector(1);
+                this.setSector("0,0");
                 
                 this.ship.attachModule(new Drift.ShipModules.CargoBay());
                 this.ship.attachModule(new Drift.ShipModules.CargoBay());
@@ -139,6 +139,16 @@
             
             getSector : function() {
                 return this.sector;
+            },
+            
+            getSectorAt : function(x, y) {
+                var index = x + "," + y;
+                console.log(index);
+                if( Drift.Sectors[index] ) {
+                    return Drift.Sectors[index];
+                } else {
+                    return false;
+                }
             },
             
             getPortById : function(id) {

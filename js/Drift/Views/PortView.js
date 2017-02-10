@@ -75,7 +75,6 @@
                                         .attr("data-role", "units")
                                         .html(numeral(resources[resource].amount).format("0,0"))
                                 );
-                            console.log(resource + ": " + resources[resource].amount);
                                 
                             if( self.port.isSelling(resource) ) {
                                 var buyPricePerUnit = numeral(Drift.Utils.calculatePricePerUnit(resource, resources[resource].sellingRate)).format("0,0");   
@@ -157,7 +156,7 @@
                         var unoccupiedHolds = ship.getUnoccupiedCargoHolds();
                         var resources = this.port.getResources();
                         var amount = resources[resource].amount;
-                        var resourceOnShip = ship.getResource(resource);
+                        var resourceOnShip = ship.getWholeNumberResource(resource);
                         
                         var sellingPricePerUnit = Drift.Utils.calculatePricePerUnit(resource, resources[resource].sellingRate);
                         var credits = player.getCredits(); 
@@ -358,7 +357,7 @@
                         var ship = Drift.getShip();
                         
                         if( undefined==amount ) {
-                            amount = ship.getResource(resource);
+                            amount = ship.getWholeNumberResource(resource);
                             
                             if( amount==0 ) {
                                 console.log("ship has 0 " + resource);

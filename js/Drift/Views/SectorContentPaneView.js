@@ -13,10 +13,13 @@
                     
                     initialize : function(parameters) {
                         this.sector = parameters.sector;
-                        
+
                         this.views = {
                             PortsContentPaneView : new Drift.Views.PortsContentPaneView(),
-                            PlanetsContentPaneView : new Drift.Views.PlanetsContentPaneView()
+                            PlanetsContentPaneView : new Drift.Views.PlanetsContentPaneView(),
+                            SectorMapView : new Drift.Views.SectorMapView({
+                                sectors : [ Drift.Sectors["0,0"], Drift.Sectors["1,0"], Drift.Sectors["0,1"], Drift.Sectors["0,-1"] ]
+                            })
                         };
                         
                         this.listenTo(Drift, "change:sector", this.onSectorChange);
@@ -35,6 +38,9 @@
                             
                             self.views.PlanetsContentPaneView.render();
                             self.$el.find("[data-role=sectorLocationTabContent]").append(self.views.PlanetsContentPaneView.$el);
+                            
+                            self.views.SectorMapView.render();
+                            self.$el.find("[data-role=sectorMapContainer]").append(self.views.SectorMapView.$el);
                             
                             self.showPortsTab();
                         }, 0);

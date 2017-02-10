@@ -47,7 +47,7 @@
                     
                     getWholeNumberResource : function(resource) {
                         var resources = this.get("resources");
-                        var r = new BigNumber(resources[resource]==undefined ? 0 : resources[resource]);
+                        var r = new BigNumber(resources[resource]==undefined ? 0 : resources[resource]).floor().toNumber();
                         
                         return r;
                     },

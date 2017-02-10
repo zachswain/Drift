@@ -21,7 +21,6 @@
                     },
                     
                     onSectorChange : function(sector) {
-                        console.log("onsectorchange");
                         this.sector = sector;
                         this.updateView();
                     },
