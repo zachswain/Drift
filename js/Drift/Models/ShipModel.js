@@ -362,7 +362,6 @@
                             if( planet ) {
                                 var rate = planetaryMiners;
                                 var ore = planet.harvest(Drift.Resources.Ore, rate);
-                                console.log("ore:" + ore);
                                 if( ore > 0 ) {
                                     this.addResources(Drift.Resources.Ore, ore);
                                 }

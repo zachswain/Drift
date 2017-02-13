@@ -44,12 +44,13 @@ header("Pragma: no-cache");
 <script src="js/Drift/Views/PortView.js" type="text/javascript"></script>
 <script src="js/Drift/Views/PlanetView.js" type="text/javascript"></script>
 <script src="js/Drift/Views/MainView.js" type="text/javascript"></script>
+<script src="js/Drift/Views/ChatPaneView.js" type="text/javascript"></script>
 
 <script src="js/Drift.js" type="text/javascript"></script>
 
 <script type="text/template" id="Drift-MainView-template">
-    <div data-role="statsViewContainer"></div>
-    <div class="MainViewContentPane">
+    <div class="StatsViewContainer" data-role="statsViewContainer"></div>
+    <div class="MainViewContentContainer">
         <div class="MainViewTabBar">
             <ul class="MainViewTabBarList">
             <li class="Tab"><button class="Button" data-role="resourcesTabBtn">R</button></li>
@@ -61,6 +62,7 @@ header("Pragma: no-cache");
         <div class="MainViewTabContent" data-role="mainViewTabContent">
         </div>
     </div>
+    <div class="ChatViewContainer" data-role="chatViewContainer"></div>
 </script>
 
 <script type="text/template" id="Drift-MainStatsView-template">
@@ -240,10 +242,15 @@ header("Pragma: no-cache");
 <script type="text/template" id="Drift-SectorTileView-template">
     <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="49" height="49" viewbox="0 0 300 300" xmlns:xlink="http://www.w3.org/1999/xlink">
         <g>
-            <polygon class="SectorTileHex" data-x="<%= sector.x %>" data-y="<%= sector.y %>" points="300,150 225,280 75,280 0,150 75,20 225,20" ></polygon>
+            <polygon class="SectorTileHex" data-id="<%= sector.id %>" data-x="<%= sector.x %>" data-y="<%= sector.y %>" points="300,150 225,280 75,280 0,150 75,20 225,20" ></polygon>
             <text data-role="id" x="50%" y="50%" alignment-baseline="middle" text-anchor="middle" font-family="Verdana" font-size="35" fill="blue"></text>
         </g>
     </svg>
+</script>
+
+<script type="text/template" id="Drift-ChatPaneView-template">
+    <div data-role="Log">
+    </div>
 </script>
 
 <script>

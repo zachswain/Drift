@@ -117,6 +117,7 @@
                     onTapped : function(e) {
                         if( e.tapCount>=2 ) {
                             console.log("tile:doubletap");
+                            this.trigger("doubletap");
                         } else {
                             console.log("tile:tapped");
                         }

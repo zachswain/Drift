@@ -23,6 +23,7 @@
                             ShipContentPaneView : new Drift.Views.ShipContentPaneView({ model : this.model, ship : this.ship }),
                             PersonnelContentPaneView : new Drift.Views.PersonnelContentPaneView({ model : this.model, ship : this.ship }),
                             SectorContentPaneView : new Drift.Views.SectorContentPaneView({ sector : new Drift.Models.SectorModel(), ship : this.ship }),
+                            ChatPaneView : new Drift.Views.ChatPaneView(),
                         };
                     },
                     
@@ -48,6 +49,9 @@
                             
                             self.views.SectorContentPaneView.render();
                             self.$el.find("[data-role=mainViewTabContent]").append(self.views.SectorContentPaneView.$el);
+                            
+                            self.views.ChatPaneView.render();
+                            self.$el.find("[data-role=chatViewContainer]").append(self.views.ChatPaneView.$el);
                             
                             self.showSectorTab();
                         }, 0);

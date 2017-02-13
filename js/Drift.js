@@ -28,7 +28,9 @@
             },
             
             run : function() {
+                var self=this;
                 console.log("Drift running");
+                
                 
                 this.player.set({
                     name : "Spaceman Spiff",
@@ -37,16 +39,21 @@
                     planetId : null,
                     credits : 100
                 });
-                this.setSector("1,0");
                 
                 this.ship.attachModule(new Drift.ShipModules.CargoBay());
                 this.ship.attachModule(new Drift.ShipModules.CargoBay());
                 this.ship.attachModule(new Drift.ShipModules.BotControl());
                 this.ship.attachModule(new Drift.ShipModules.MiningBay());
                 //this.ship.addBots(Drift.Bots.ScrapCollectors, 1);
-                //this.ship.addBots(Drift.Bots.PlanetaryMiners, 5);
+                //this.ship.addBots(Drift.Bots.PlanetaryMiners, 5);                    
                 
-                this.startTick();
+                this.setSector(1).then(function() {
+                    self.startTick();
+                    
+                    self.sendMessage({
+                        message : "Drift running"
+                    });
+                });
             },
             
             startTick : function() {
@@ -64,16 +71,28 @@
                 });
                 
                 this.ship.tick();
-                
+
                 this.intervalId = setTimeout(function() {
                     self.tick();
                 }, 1000);
             },
             
+            sendMessage : function(msg) {
+                this.trigger("chatMessage", msg);  
+            },
+            
             setSector : function(sectorId) {
-                this.player.setSectorId(sectorId);
-                this.sector = Drift.Sectors[sectorId];
-                this.trigger("change:sector", this.sector);
+                var promise = $.Deferred();
+                
+                var self=this;
+                Drift.getSectorById(sectorId).then(function(sector) {
+                    self.player.setSectorId(sector.getId());
+                    self.sector = sector;
+                    self.trigger("change:sector", self.sector);
+                    promise.resolve();
+                });
+                
+                return promise.promise();
             },
             
             getSector : function() {
@@ -155,8 +174,27 @@
                 }
             },
             
+            getSectorById : function(sectorId) {
+                var promise = $.Deferred();
+                
+                promise.resolve(Drift.Sectors[sectorId]);
+                
+                return promise.promise();
+            },
+            
             getPortById : function(id) {
                 return Drift.Ports[id];
+            },
+            
+            moveToSector : function(sectorId) {
+                var self=this;
+                this.getSectorById(sectorId)
+                .then(function(sector) {
+                    self.setSector(sectorId);
+                })
+                .fail(function(err) {
+                    console.log("failed moving for unknown reason");
+                });
             }
         }  
     });

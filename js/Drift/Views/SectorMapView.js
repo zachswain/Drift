@@ -35,8 +35,9 @@
                         
                         var self=this;
                         self.sectors = {};
+                        
                         $.each(sectors, function(index, sector) {
-                            self.sectors[sector.getId()] = sector;
+                            self.sectors[index] = sector;
                         });
                         
                         self.sectorTiles = {};
@@ -123,6 +124,10 @@
                         //this.$el.append(sectorTile.$el);
                         this.tilesDiv.append(sectorTile.$el);
                         this.sectorTiles[sector.getId()] = sectorTile;
+                        
+                        this.listenTo(sectorTile, "doubletap", function() {
+                            this.trigger("doubletap:sector", sector.getId());
+                        });
                     },
                     
                     onClick : function(e) {
@@ -251,7 +256,7 @@
                         
                         this.$el.find("polygon").removeClass("currentSector");
                         
-                        selector = "polygon[data-x=" + sector.getX() + "][data-y=" + sector.getY() + "]";
+                        var selector = "polygon[data-id=" + sector.getId() + "]";
                         this.$el.find(selector).addClass("currentSector");
                     }
                 })

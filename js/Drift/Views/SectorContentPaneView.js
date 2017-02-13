@@ -18,11 +18,12 @@
                             PortsContentPaneView : new Drift.Views.PortsContentPaneView(),
                             PlanetsContentPaneView : new Drift.Views.PlanetsContentPaneView(),
                             SectorMapView : new Drift.Views.SectorMapView({
-                                sectors : [ Drift.Sectors["0,0"], Drift.Sectors["1,0"], Drift.Sectors["0,1"], Drift.Sectors["0,-1"], Drift.Sectors["1,1"] ]
+                                sectors : [ Drift.Sectors[0], Drift.Sectors[1], Drift.Sectors[2], Drift.Sectors[3], Drift.Sectors[4] ]
                             })
                         };
                         
                         this.listenTo(Drift, "change:sector", this.onSectorChange);
+                        this.listenTo(this.views.SectorMapView, "doubletap:sector", this.onSectorDoubleTapped)
                     },
                     
                     render : function() {
@@ -44,6 +45,12 @@
                             
                             self.showPortsTab();
                         }, 0);
+                    },
+                    
+                    onSectorDoubleTapped : function(sectorId) {
+                        console.log("moving to " + sectorId);
+                        
+                        Drift.moveToSector(sectorId);
                     },
                     
                     onSectorChange : function(sector) {

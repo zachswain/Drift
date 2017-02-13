@@ -5,7 +5,7 @@
             Planets : {
                 1 : new Drift.Models.PlanetModel({
                     id : 1,
-                    sectorId : "0,0",
+                    sectorId : 0,
                     resources : {
                         "Ore" : {
                             amount : 1000,
@@ -17,7 +17,7 @@
                 
                 2 : new Drift.Models.PlanetModel({
                     id : 2,
-                    sectorId : "0,0",
+                    sectorId : 0,
                     resources : {
                         "Ore" : {
                             amount : 2000,

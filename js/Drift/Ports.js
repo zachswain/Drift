@@ -5,7 +5,7 @@
             Ports : {
                 1 : new Drift.Models.PortModel({
                     id : 1,
-                    sectorId : "0,0",
+                    sectorId : 0,
                     resources : {
                         "Scrap" : {
                             buying : true,
@@ -29,7 +29,7 @@
                 
                 2 : new Drift.Models.PortModel({
                     id : 2,
-                    sectorId : "0,0",
+                    sectorId : 0,
                     resources : {
                         "Ore" : {
                             buying : true,

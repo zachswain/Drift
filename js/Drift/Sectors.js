@@ -3,8 +3,8 @@
     $.extend(true, window, {
         Drift : {
             Sectors : {
-                "0,0" : new Drift.Models.SectorModel({
-                    id : "0,0",
+                0 : new Drift.Models.SectorModel({
+                    id : 0,
                     x : 0,
                     y : 0,
                     ports : [1, 2],
@@ -17,32 +17,32 @@
                         }
                     }
                 }),
-                "1,0" : new Drift.Models.SectorModel({
-                    id : "1,0",
+                1 : new Drift.Models.SectorModel({
+                    id : 1,
                     x : 1,
                     y : 0,
                     ports : [],
                     planets : [],
                     resources : {}
                 }),
-                "0,1" : new Drift.Models.SectorModel({
-                    id : "0,1",
+                2 : new Drift.Models.SectorModel({
+                    id : 2,
                     x : 0,
                     y : 1,
                     ports : [],
                     planets : [],
                     resources : {}
                 }),
-                "0,-1" : new Drift.Models.SectorModel({
-                    id : "0,-1",
+                3 : new Drift.Models.SectorModel({
+                    id : 3,
                     x : 0,
                     y : -1,
                     ports : [],
                     planets : [],
                     resources : {}
                 }),
-                "1,1" : new Drift.Models.SectorModel({
-                    id : "1,1",
+                4 : new Drift.Models.SectorModel({
+                    id : 4,
                     x : 1,
                     y : 1,
                     ports : [],
