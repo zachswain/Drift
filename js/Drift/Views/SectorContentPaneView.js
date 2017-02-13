@@ -18,7 +18,7 @@
                             PortsContentPaneView : new Drift.Views.PortsContentPaneView(),
                             PlanetsContentPaneView : new Drift.Views.PlanetsContentPaneView(),
                             SectorMapView : new Drift.Views.SectorMapView({
-                                sectors : [ Drift.Sectors["0,0"], Drift.Sectors["1,0"], Drift.Sectors["0,1"], Drift.Sectors["0,-1"] ]
+                                sectors : [ Drift.Sectors["0,0"], Drift.Sectors["1,0"], Drift.Sectors["0,1"], Drift.Sectors["0,-1"], Drift.Sectors["1,1"] ]
                             })
                         };
                         

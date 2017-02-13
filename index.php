@@ -5,7 +5,7 @@ header("Pragma: no-cache");
 ?><!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
 <link href="css/reset.css" rel="stylesheet"></link>
 <link href="css/Drift-web.css" rel="stylesheet"></link>
 <script src="node_modules/jquery/dist/jquery.min.js" type="text/javascript"></script>
@@ -14,6 +14,7 @@ header("Pragma: no-cache");
 <script src="node_modules/numeral/numeral.js" type="text/javascript"></script>
 <script src="node_modules/bignumber.js/bignumber.min.js" type="text/javascript"></script>
 <script src="node_modules/jquery.panzoom/dist/jquery.panzoom.min.js" type="text/javascript"></script>
+<script src="node_modules/hammerjs/hammer.min.js" type="text/javascript"></script>
 
 <script src="js/Drift/Models/DriftModel.js" type="text/javascript"></script>
 <script src="js/Drift/Models/PlayerModel.js" type="text/javascript"></script>
@@ -239,7 +240,7 @@ header("Pragma: no-cache");
 <script type="text/template" id="Drift-SectorTileView-template">
     <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="49" height="49" viewbox="0 0 300 300" xmlns:xlink="http://www.w3.org/1999/xlink">
         <g>
-            <polygon class="hex" points="300,150 225,280 75,280 0,150 75,20 225,20" ></polygon>
+            <polygon class="SectorTileHex" data-x="<%= sector.x %>" data-y="<%= sector.y %>" points="300,150 225,280 75,280 0,150 75,20 225,20" ></polygon>
             <text data-role="id" x="50%" y="50%" alignment-baseline="middle" text-anchor="middle" font-family="Verdana" font-size="35" fill="blue"></text>
         </g>
     </svg>

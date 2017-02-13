@@ -128,19 +128,43 @@ div {
 }
 
 .SectorMap {
-    position: absolute;
+    position: relative;
     background: #808080;
     width: 100%;
     height: 100%;
-    background: green;
+    overflow: hidden;
+    z-index: 1000;
+}
+
+.SectorMap > div {
+    width: 0;
+    background-color: transparent;
+    background-image: linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%, transparent);
+    height:0;
+    background-size:50px 50px;
+    position: absolute;
+    z-index: 1001;
+}
+
+.SectorMap button {
+    position: relative;
+    z-index: 1010;
+}
+
+.SectorMap .SectorTile svg {
+    z-index: 1002;
 }
 
 .SectorTile {
     position: absolute;
 }
 
-.hex {
+polygon.SectorTileHex {
     fill: #404040;
     stroke: #b0b0b0;
     stroke-width: 4px;
+}
+
+polygon.SectorTileHex.currentSector {
+    fill : #b08080;
 }

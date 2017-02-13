@@ -41,6 +41,14 @@
                     planets : [],
                     resources : {}
                 }),
+                "1,1" : new Drift.Models.SectorModel({
+                    id : "1,1",
+                    x : 1,
+                    y : 1,
+                    ports : [],
+                    plants : [],
+                    resources : {}
+                })
             }
         }
     })

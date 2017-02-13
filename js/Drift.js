@@ -37,7 +37,7 @@
                     planetId : null,
                     credits : 100
                 });
-                this.setSector("0,0");
+                this.setSector("1,0");
                 
                 this.ship.attachModule(new Drift.ShipModules.CargoBay());
                 this.ship.attachModule(new Drift.ShipModules.CargoBay());
@@ -74,6 +74,10 @@
                 this.player.setSectorId(sectorId);
                 this.sector = Drift.Sectors[sectorId];
                 this.trigger("change:sector", this.sector);
+            },
+            
+            getSector : function() {
+                return this.sector;
             },
             
             orbit : function(planetId) {
