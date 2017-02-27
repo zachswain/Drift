@@ -10,26 +10,24 @@
                         "click [data-role=resourcesTabBtn]" : "onResourcesTabBtnClicked",
                         "click [data-role=shipTabBtn]" : "onShipTabBtnClicked",
                         "click [data-role=personnelTabBtn]" : "onPersonnelTabBtnClicked",
-                        "click [data-role=sectorTabBtn]" : "onSectorTabBtnClicked",
+                        "click [data-role=mapTabBtn]" : "onMapTabBtnClicked",
                     },
                     
                     initialize : function(parameters) {
-                        this.model = parameters.model;
-                        this.ship = parameters.ship;
-                        
+
                         this.views = {
-                            StatsView : new Drift.Views.MainStatsView({ model : this.model, ship : this.ship }),
-                            ResourcesContentPaneView : new Drift.Views.ResourcesContentPaneView({ model : this.model, ship : this.ship }),
-                            ShipContentPaneView : new Drift.Views.ShipContentPaneView({ model : this.model, ship : this.ship }),
-                            PersonnelContentPaneView : new Drift.Views.PersonnelContentPaneView({ model : this.model, ship : this.ship }),
-                            SectorContentPaneView : new Drift.Views.SectorContentPaneView({ sector : new Drift.Models.SectorModel(), ship : this.ship }),
+                            StatsView : new Drift.Views.MainStatsView(),
+                            ResourcesContentPaneView : new Drift.Views.ResourcesContentPaneView(),
+                            ShipContentPaneView : new Drift.Views.ShipContentPaneView(),
+                            PersonnelContentPaneView : new Drift.Views.PersonnelContentPaneView(),
+                            MapContentPaneView : new Drift.Views.MapContentPaneView(),
                             ChatPaneView : new Drift.Views.ChatPaneView(),
                         };
                     },
                     
                     render : function() {
                         var template = _.template( $("#Drift-MainView-template").html() );
-                        var html = template({ model : this.model.toJSON() });
+                        var html = template();
                         this.$el.html(html);
                         
                         var self=this;
@@ -47,13 +45,13 @@
                             self.views.PersonnelContentPaneView.render();
                             self.$el.find("[data-role=mainViewTabContent]").append(self.views.PersonnelContentPaneView.$el);
                             
-                            self.views.SectorContentPaneView.render();
-                            self.$el.find("[data-role=mainViewTabContent]").append(self.views.SectorContentPaneView.$el);
+                            self.views.MapContentPaneView.render();
+                            self.$el.find("[data-role=mainViewTabContent]").append(self.views.MapContentPaneView.$el);
                             
                             self.views.ChatPaneView.render();
                             self.$el.find("[data-role=chatViewContainer]").append(self.views.ChatPaneView.$el);
                             
-                            self.showSectorTab();
+                            self.showMapTab();
                         }, 0);
                     },
                     
@@ -72,9 +70,9 @@
                         this.$el.find("[data-role=personnelTabBtn]").parent().addClass("Active").siblings().removeClass("Active");
                     },
                     
-                    showSectorTab : function() {
-                        this.views.SectorContentPaneView.$el.show().siblings().hide();
-                        this.$el.find("[data-role=sectorTabBtn]").parent().addClass("Active").siblings().removeClass("Active");
+                    showMapTab : function() {
+                        this.views.MapContentPaneView.$el.show().siblings().hide();
+                        this.$el.find("[data-role=mapTabBtn]").parent().addClass("Active").siblings().removeClass("Active");
                     },
                     
                     onResourcesTabBtnClicked : function(e) {
@@ -95,6 +93,11 @@
                     onSectorTabBtnClicked : function(e) {
                         e.preventDefault();
                         this.showSectorTab();
+                    },
+                    
+                    onMapTabBtnClicked : function(e) {
+                        e.preventDefault();
+                        this.showMapTab();
                     }
                 })
             }

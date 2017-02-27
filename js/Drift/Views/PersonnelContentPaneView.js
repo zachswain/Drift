@@ -18,8 +18,7 @@
                     },
                     
                     initialize : function(parameters) {
-                        this.model = parameters.model;
-                        this.ship = parameters.ship;
+                        this.ship = Drift.getShip();
                         
                         this.listenTo(this.ship, "change:resource:" + Drift.Resources.Scrap, this.onScrapChange);
                         this.listenTo(this.ship, "change:bots", this.onBotsChange);
@@ -30,8 +29,10 @@
                     },
                     
                     render : function() {
+                        var ship = Drift.getShip();
+                        
                         var template = _.template( $("#Drift-PersonnelContentPaneView-template").html() );
-                        var html = template({ model : this.model.toJSON(), ship : this.ship.toJSON() });
+                        var html = template({ ship : this.ship.toJSON() });
                         this.$el.html(html);
                         
                         this.updateView();

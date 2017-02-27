@@ -11,15 +11,15 @@
                     },
                     
                     initialize : function(parameters) {
-                        this.model = parameters.model;
-                        this.ship = parameters.ship;
+                        var ship = Drift.getShip();
                         
                         this.listenTo(this.ship, "attach:module", this.onModuleAttached);
                     },
                     
                     render : function() {
+                        var ship = Drift.getShip();
                         var template = _.template( $("#Drift-ShipContentPaneView-template").html() );
-                        var html = template({ model : this.model.toJSON(), ship : this.ship.toJSON() });
+                        var html = template({ ship : ship.toJSON() });
                         this.$el.html(html);
                         
                         this.updateView();
@@ -36,8 +36,9 @@
                     },
                     
                     updateModulesInfo : function() {
-                        this.$el.find("[data-role=occupiedModulesSpan]").html(this.ship.getModuleCount());
-                        this.$el.find("[data-role=maxModulesSpan]").html(this.ship.getMaxModules());
+                        var ship = Drift.getShip();
+                        this.$el.find("[data-role=occupiedModulesSpan]").html(ship.getModuleCount());
+                        this.$el.find("[data-role=maxModulesSpan]").html(ship.getMaxModules());
                     },
                     
                     clearModulesList : function() {
@@ -45,12 +46,13 @@
                     },
                     
                     updateModulesList : function() {
+                        var ship = Drift.getShip();
                         this.clearModulesList();
                         
                         var list = this.$el.find(this.selectors.ModulesList);
-                        var modules = this.ship.getModules();
+                        var modules = ship.getModules();
                         
-                        for( var i=0 ; i<this.ship.getMaxModules() ; i++ ) {
+                        for( var i=0 ; i<ship.getMaxModules() ; i++ ) {
                             if( modules[i] ) {
                                 var li = $("<li></li>").html(
                                     (i+1) + ". " + modules[i].getName()

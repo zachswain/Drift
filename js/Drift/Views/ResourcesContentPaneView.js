@@ -11,19 +11,18 @@
                     },
                     
                     initialize : function(parameters) {
-                        this.model = parameters.model;
-                        this.ship = parameters.ship;
                     },
                     
                     render : function() {
                         var template = _.template( $("#Drift-ResourcesContentPaneView-template").html() );
-                        var html = template({ model : this.model.toJSON() });
+                        var html = template();
                         this.$el.html(html);
                     },
                     
                     onScrapBtnClicked : function(e) {
                         e.preventDefault();
-                        this.ship.addResources(Drift.Resources.Scrap, 1);
+                        var ship = Drift.getShip();
+                        ship.addResources(Drift.Resources.Scrap, 1);
                     }
                 })
             }

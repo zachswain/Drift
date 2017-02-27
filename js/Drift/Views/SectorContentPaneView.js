@@ -12,13 +12,13 @@
                     },
                     
                     initialize : function(parameters) {
-                        this.sector = parameters.sector;
+                        this.sector = Drift.getSector();
 
                         this.views = {
                             PortsContentPaneView : new Drift.Views.PortsContentPaneView(),
                             PlanetsContentPaneView : new Drift.Views.PlanetsContentPaneView(),
                             SectorMapView : new Drift.Views.SectorMapView({
-                                sectors : [ Drift.Sectors[0], Drift.Sectors[1], Drift.Sectors[2], Drift.Sectors[3], Drift.Sectors[4] ]
+                                sectors : [ ]
                             })
                         };
                         

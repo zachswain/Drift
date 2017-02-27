@@ -68,6 +68,30 @@
                     
                     getSectorId : function() {
                         return this.get("sectorId");
+                    },
+                    
+                    getOrbitDistance : function() {
+                        return this.get("orbitDistance");
+                    },
+                    
+                    getOrbitPosition : function() {
+                        return this.get("orbitPosition");
+                    },
+                    
+                    getRadius : function() {
+                        return this.get("radius");
+                    },
+                    
+                    getRelativeCenter : function() {
+                        var orbitDistance = this.getOrbitDistance() / 100 * .8 * Drift.Globals.SectorTile.width + .2 * Drift.Globals.SectorTile.width;
+                        
+                        var cx = orbitDistance * Math.cos( this.getOrbitPosition() * Math.PI / 180 );
+                        var cy = orbitDistance * Math.sin( this.getOrbitPosition() * Math.PI/ 180 );
+                        
+                        return {
+                            left : cx * Drift.Globals.SectorTile.width / Drift.Globals.SectorTile.viewBoxWidth,
+                            top : cy * Drift.Globals.SectorTile.height / Drift.Globals.SectorTile.viewBoxHeight
+                        }
                     }
                 })
             }

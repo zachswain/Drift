@@ -17,12 +17,10 @@
                 this.sector = null;
                 this.planet = null;
                 
-                this.view = new Drift.Views.MainView({
-                    model : this.model,
-                    ship : this.ship
-                });
-                this.view.render();
-                $("body").append(this.view.$el);
+                Drift.Server.initialize();
+                Drift.Server.run();
+            
+                this.listenTo(Drift.Server, "change:ticks", this.onTicksChange);
                 
                 var self=this;
             },
@@ -31,50 +29,37 @@
                 var self=this;
                 console.log("Drift running");
                 
+                var self = this;
                 
-                this.player.set({
-                    name : "Spaceman Spiff",
-                    sectorId : "0,0",
-                    portId : null,
-                    planetId : null,
-                    credits : 100
-                });
-                
-                this.ship.attachModule(new Drift.ShipModules.CargoBay());
-                this.ship.attachModule(new Drift.ShipModules.CargoBay());
-                this.ship.attachModule(new Drift.ShipModules.BotControl());
-                this.ship.attachModule(new Drift.ShipModules.MiningBay());
-                //this.ship.addBots(Drift.Bots.ScrapCollectors, 1);
-                //this.ship.addBots(Drift.Bots.PlanetaryMiners, 5);                    
-                
-                this.setSector(1).then(function() {
-                    self.startTick();
-                    
-                    self.sendMessage({
-                        message : "Drift running"
+                Drift.Server.getPlayer()
+                    .then(function(player) {
+                        console.log(player);
+                        self.player.set(player);
+                        
+                        self.ship.attachModule(new Drift.ShipModules.CargoBay());
+                        self.ship.attachModule(new Drift.ShipModules.CargoBay());
+                        self.ship.attachModule(new Drift.ShipModules.BotControl());
+                        self.ship.attachModule(new Drift.ShipModules.MiningBay());
+                        //this.ship.addBots(Drift.Bots.ScrapCollectors, 1);
+                        //this.ship.addBots(Drift.Bots.PlanetaryMiners, 5);
+                        
+                        self.setSector(self.player.getSectorId())
+                            .then(function() {
+                                self.sendMessage({
+                                    message : "Drift running"
+                                });
+                                
+                                self.view = new Drift.Views.MainView();
+                                self.view.render();
+                                $("body").append(self.view.$el);
+                            })
+                            .fail(function() {
+                                console.log("set sector failed NYI");
+                            });
+                    })
+                    .fail(function() {
+                        console.log("get player fail NYI"); 
                     });
-                });
-            },
-            
-            startTick : function() {
-                var self=this;
-                this.tick();
-            },
-            
-            tick : function() {
-                var self=this;
-                
-                var ticks = self.model.get("ticks");
-                ticks++;
-                this.model.set({
-                    ticks : ticks
-                });
-                
-                this.ship.tick();
-
-                this.intervalId = setTimeout(function() {
-                    self.tick();
-                }, 1000);
             },
             
             sendMessage : function(msg) {
@@ -160,23 +145,22 @@
                 return this.planet;
             },
             
+            getPlanetById : function(planetId) {
+                var promise = $.Deferred();
+                
+                promise.resolve(Drift.Planets[planetId]);
+                
+                return promise.promise();
+            },
+            
             getSector : function() {
                 return this.sector;
             },
             
-            getSectorAt : function(x, y) {
-                var index = x + "," + y;
-                console.log(index);
-                if( Drift.Sectors[index] ) {
-                    return Drift.Sectors[index];
-                } else {
-                    return false;
-                }
-            },
-            
-            getSectorById : function(sectorId) {
+            getSectorById : function(sectorId, includeNeighbors) {
                 var promise = $.Deferred();
                 
+                // query server for sectors 
                 promise.resolve(Drift.Sectors[sectorId]);
                 
                 return promise.promise();
@@ -195,6 +179,13 @@
                 .fail(function(err) {
                     console.log("failed moving for unknown reason");
                 });
+            },
+            
+            onTicksChange : function(ticks) {
+                this.model.set({
+                    ticks : ticks
+                });
+                this.trigger("change:ticks", ticks);
             }
         }  
     });

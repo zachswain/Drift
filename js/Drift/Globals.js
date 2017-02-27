@@ -18,6 +18,12 @@
                     SouthEast : { x : 1, y : 0 },
                     South : { x : 0, y : 1 },
                     SouthWest : { x : -1, y : 1 }
+                },
+                SectorTile : {
+                    width : 100,
+                    height : 100,
+                    viewBoxWidth : 300,
+                    viewBoxHeight : 300
                 }
             }
         }

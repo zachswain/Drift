@@ -5,8 +5,6 @@
             Models : {
                 DriftModel : Backbone.Model.extend({
                     defaults : {
-                        currentEnergy : 0,
-                        scrap : 0,
                         ticks : 0
                     },
                     

@@ -42,13 +42,14 @@
                         
                         self.sectorTiles = {};
                         
+                        this.tilesDiv = $("<div></div>");
+                        
                         this.listenTo(Drift, "change:sector", this.onSectorChange);
                     },
                     
                     render : function() {
                         this.$el.html("");
                         
-                        this.tilesDiv = $("<div></div>");
                         this.$el.append(this.tilesDiv);
                         
                         this.$el.append(
@@ -116,6 +117,11 @@
                     },
                     
                     addSector : function(sector) {
+                        if( this.sectors[sector.getId()] ) {
+                            console.log("sector already in map, ignoring");
+                            return;
+                        }
+                        
                         this.sectors[sector.getId()] = sector;
                         var sectorTile = new Drift.Views.SectorTileView({
                             sector : sector
@@ -247,6 +253,8 @@
                     
                     onSectorChange : function(sector) {
                         console.log("map:sectorchange");
+
+                        this.addSector(sector);
                         
                         this.highlightCurrentSector();
                     },

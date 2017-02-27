@@ -228,8 +228,6 @@
                     
                     updateDockButtons : function() {
                         var player = Drift.getPlayer();
-                        console.log("player=" + player.getSectorId());
-                        console.log("port=" + this.port.getSectorId());
                         if( player.isDockedInPort() || player.isOrbitingPlanet() ) {
                             this.disableDockBtn();
                         } else if( !player.inSector(this.port.getSectorId()) ) {

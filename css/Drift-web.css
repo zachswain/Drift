@@ -143,6 +143,7 @@ body {
     background: #202020;
 }
 
+/* old sector map */
 .SectorMap {
     position: relative;
     background: #808080;
@@ -181,10 +182,54 @@ polygon.SectorTileHex {
     stroke-width: 4px;
 }
 
-polygon.SectorTileHex.currentSector {
-    fill : #b08080;
+/* Map */
+.Map {
+    position: relative;
+    background: #808080;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 1000;
 }
 
+.Map > div {
+    width: 0px;
+    /*
+    background-color: transparent;
+    background-image: linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%, transparent);
+    */
+    background: green;
+    height: 0px;
+    background-size:50px 50px;
+    position: absolute;
+    z-index: 1001;
+    transform-origin: top left;
+}
+
+.Map button {
+    position: relative;
+    z-index: 1010;
+}
+
+.Map .SectorTile svg {
+    z-index: 1002;
+}
+
+.Map .SectorTile {
+    position: absolute;
+}
+
+.Map .SectorTile polygon.SectorTileHex {
+    fill: #404040;
+    stroke: #b0b0b0;
+    stroke-width: 1px;
+}
+
+.Map .SectorTile polygon.SectorTileHex.currentSector {
+    stroke: #ffb0b0;
+}
+
+/* Chat pane */
 .ChatPaneView {
     position: relative;
     height: 100%;
@@ -201,4 +246,30 @@ polygon.SectorTileHex.currentSector {
     height: 100%;
     margin: 0px;
     padding: 0px;
+}
+
+/* Sector Orbits */
+circle.Star {
+    stroke: none;
+    fill: white;
+    display: none;
+}
+
+circle.Orbit {
+    stroke-width: .5px;
+    stroke-dasharray: 1, 5;
+    fill: none;
+    stroke:  #d0d0d0;
+    stroke-linecap: round;
+    display: none;
+}
+
+circle.Planet {
+    stroke: none;
+    fill: white;
+    display: none;
+}
+
+.SectorTile.ShowFeatures .Feature {
+    display: inline;
 }

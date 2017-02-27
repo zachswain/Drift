@@ -7,7 +7,6 @@
                     className : "MainStatsView",
                     
                     initialize : function(parameters) {
-                        this.model = parameters.model;
                         this.ship = Drift.getShip();
                         this.player = Drift.getPlayer();
                         
@@ -15,13 +14,13 @@
                         this.listenTo(this.ship, "change:resource:" + Drift.Resources.Ore, this.onOreChange);
                         this.listenTo(this.ship, "attach:module", this.onAttachModule);
                         this.listenTo(this.ship, "change:resources", this.onResourcesChange);
-                        this.listenTo(this.model, "change:ticks", this.onTicksChange);
+                        this.listenTo(Drift, "change:ticks", this.onTicksChange);
                         this.listenTo(this.player, "change:credits", this.onCreditsChange);
                     },
                     
                     render : function() {
                         var template = _.template( $("#Drift-MainStatsView-template").html() );
-                        var html = template({ model : this.model.toJSON() });
+                        var html = template();
                         this.$el.html(html);
                         
                         this.updateView();
@@ -48,9 +47,9 @@
                         );
                     },
                     
-                    onTicksChange : function() {
+                    onTicksChange : function(ticks) {
                         this.$el.find("[data-role=ticksSpan]").html(
-                            numeral(this.model.get("ticks")).format("0")
+                            numeral(ticks).format("0")
                         );
                     },
                     

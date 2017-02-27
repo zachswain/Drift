@@ -7,6 +7,8 @@
                     id : 0,
                     x : 0,
                     y : 0,
+                    firstVisitedOn : null,
+                    lastVisitedOn : null,
                     ports : [1, 2],
                     planets : [1, 2],
                     resources : {
@@ -21,6 +23,8 @@
                     id : 1,
                     x : 1,
                     y : 0,
+                    firstVisitedOn : null,
+                    lastVisitedOn : null,
                     ports : [],
                     planets : [],
                     resources : {}
@@ -37,6 +41,8 @@
                     id : 3,
                     x : 0,
                     y : -1,
+                    firstVisitedOn : null,
+                    lastVisitedOn : null,
                     ports : [],
                     planets : [],
                     resources : {}
@@ -45,6 +51,8 @@
                     id : 4,
                     x : 1,
                     y : 1,
+                    firstVisitedOn : null,
+                    lastVisitedOn : null,
                     ports : [],
                     plants : [],
                     resources : {}
