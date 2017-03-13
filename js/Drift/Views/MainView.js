@@ -9,20 +9,27 @@
                     events : {
                         "click [data-role=resourcesTabBtn]" : "onResourcesTabBtnClicked",
                         "click [data-role=shipTabBtn]" : "onShipTabBtnClicked",
-                        "click [data-role=personnelTabBtn]" : "onPersonnelTabBtnClicked",
-                        "click [data-role=mapTabBtn]" : "onMapTabBtnClicked",
+                        "click [data-role=personnelTabBtn]" : "onPersonnƒelTabBtnClicked",
+                        "click [data-role=sectorTabBtn]" : "onSectorTabBtnClicked",
                     },
                     
                     initialize : function(parameters) {
-
-                        this.views = {
+                        var self=this;
+                        
+                        self.views = {
                             StatsView : new Drift.Views.MainStatsView(),
                             ResourcesContentPaneView : new Drift.Views.ResourcesContentPaneView(),
                             ShipContentPaneView : new Drift.Views.ShipContentPaneView(),
                             PersonnelContentPaneView : new Drift.Views.PersonnelContentPaneView(),
-                            MapContentPaneView : new Drift.Views.MapContentPaneView(),
+                            MapView : new Drift.Views.MapView({
+                                sectors : [  ]
+                            }),
+                            SectorContentPaneView : new Drift.Views.SectorContentPaneView(),
                             ChatPaneView : new Drift.Views.ChatPaneView(),
                         };
+                        
+                        this.listenTo(this.views.MapView, "tap:sector", this.onSectorTapped);
+                        this.listenTo(this.views.MapView, "doubletap:sector", this.onSectorDoubleTapped);
                     },
                     
                     render : function() {
@@ -45,13 +52,16 @@
                             self.views.PersonnelContentPaneView.render();
                             self.$el.find("[data-role=mainViewTabContent]").append(self.views.PersonnelContentPaneView.$el);
                             
-                            self.views.MapContentPaneView.render();
-                            self.$el.find("[data-role=mainViewTabContent]").append(self.views.MapContentPaneView.$el);
+                            self.views.SectorContentPaneView.render();
+                            self.$el.find("[data-role=mainViewTabContent]").append(self.views.SectorContentPaneView.$el);
                             
                             self.views.ChatPaneView.render();
                             self.$el.find("[data-role=chatViewContainer]").append(self.views.ChatPaneView.$el);
                             
-                            self.showMapTab();
+                            self.views.MapView.render();
+                            self.$el.find("[data-role=mapViewContainer]").append(self.views.MapView.$el);
+                            
+                            self.showShipTab();
                         }, 0);
                     },
                     
@@ -70,9 +80,9 @@
                         this.$el.find("[data-role=personnelTabBtn]").parent().addClass("Active").siblings().removeClass("Active");
                     },
                     
-                    showMapTab : function() {
-                        this.views.MapContentPaneView.$el.show().siblings().hide();
-                        this.$el.find("[data-role=mapTabBtn]").parent().addClass("Active").siblings().removeClass("Active");
+                    showSectorTab : function() {
+                        this.views.SectorContentPaneView.$el.show().siblings().hide();
+                        this.$el.find("[data-role=sectorTabBtn]").parent().addClass("Active").siblings().removeClass("Active");
                     },
                     
                     onResourcesTabBtnClicked : function(e) {
@@ -95,9 +105,14 @@
                         this.showSectorTab();
                     },
                     
-                    onMapTabBtnClicked : function(e) {
-                        e.preventDefault();
-                        this.showMapTab();
+                    onSectorTapped : function(sectorId) {
+                        this.showSectorTab();
+                        this.views.SectorContentPaneView.showSector(sectorId);
+                    },
+                    
+                    onSectorDoubleTapped : function(sectorId) {
+                        console.log("doubletap " + sectorId);
+                        Drift.moveToSector(sectorId);
                     }
                 })
             }

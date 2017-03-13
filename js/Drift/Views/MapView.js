@@ -28,7 +28,8 @@
                         this.model = new Backbone.Model({
                             zoomed : false,
                             zoomedOn : null,
-                            locked : false
+                            locked : false,
+                            showUnexploredNeighbors : true
                         });
                         this.isMousedown = false;
                         this.isDragging = false;
@@ -53,6 +54,7 @@
                         this.tilesDiv = $("<div id='tilesDiv'></div>");
                         
                         this.listenTo(Drift, "change:sector", this.onSectorChange);
+                        this.listenTo(Drift, "set:sector", this.onSectorSet);
                         this.listenTo(this.model, "change:zoomed", this.onZoomedChange);
                     },
                     
@@ -110,15 +112,22 @@
 
                         var sectorTile = this.sectorTiles[sectorId];
                         
-                        var center = sectorTile.getCenter();
-                        
-                        this.x = this.getWidth() / 2 - center.left * scale;
-                        this.y = this.getHeight() / 2 - center.top * scale;
+                        if( sectorTile ) {
+                            var center = sectorTile.getCenter();
+                            
+                            this.x = this.getWidth() / 2 - center.left * scale;
+                            this.y = this.getHeight() / 2 - center.top * scale;
+                        } else {
+                            this.x = this.getWidth() / 2;
+                            this.y = this.getHeight() / 2;
+                        }
 
                         this.tilesDiv.css({
                             "transform" : "translate(" + this.x + "px," + this.y + "px) scale(" + scale + ")",
                             "transition-duration" : ".1s"
-                        })
+                        });
+                        
+                        this.updateBackground();
                     },
                     
                     centerOnPlanet : function(planetId, scale) {
@@ -142,7 +151,9 @@
                                 self.tilesDiv.css({
                                     "transform" : "translate(" + this.x + "px," + this.y + "px) scale(" + scale + ")",
                                     "transition-duration" : ".1s"
-                                })
+                                });
+                                
+                                this.updateBackground();
                             })
                             .fail(function() {
                                 console.log("centerOnPlanet fail NYI");
@@ -165,14 +176,22 @@
                                 "transform" : "translate(" + this.x + "px," + this.y + "px) scale(" + this.scale + ")"
                             });
                         }
+                        
+                        this.updateBackground();
                     },
                     
                     centerOnCurrentSector : function() {
                         var sector = Drift.getSector();
-                        this.centerOnSector(sector.getId());
+                        if( sector ) {
+                            this.centerOnSector(sector.getId());
+                        }
                     },
                     
                     addSector : function(sector) {
+                        var self=this;
+                        
+                        console.log("add sector " + sector.getId());
+                        
                         if( !this.sectors[sector.getId()] ) {
                             this.sectors[sector.getId()] = sector;                            
                         }
@@ -189,11 +208,20 @@
                             this.listenTo(sectorTile, "doubletap", function(e) {
                                 var target=$(e.target);
                                 if( $(target).hasClass("Planet") ) {
-                                    this.trigger("doubletap:planet", $(target).attr("data-id"));
-                                } else {
-                                    this.trigger("doubletap:sector", sector.getId());
+                                    self.trigger("doubletap:planet", $(target).attr("data-id"));
+                                } else if( $(target).hasClass("SectorTileHex") ) {
+                                    self.trigger("doubletap:sector", $(target).attr("data-id"));
                                 }
-                            });    
+                            });
+                            
+                            this.listenTo(sectorTile, "tap", function(e) {
+                                var target=$(e.target);
+                                if( $(target).hasClass("Planet") ) {
+                                    self.trigger("tap:planet", $(target).attr("data-id"));
+                                } else if( $(target).hasClass("SectorTileHex") ) {
+                                    self.trigger("tap:sector", $(target).attr("data-id"));
+                                }
+                            })
                         }
                     },
                     
@@ -238,8 +266,19 @@
                             this.tilesDiv.css({
                                 "transition-duration" : "unset",
                                 "transform" : "translate(" + this.x + "px," + this.y + "px) scale(" + this.scale + ")",
-                            })
+                            });
+                            
+                            this.updateBackground();
                         }
+                    },
+                    
+                    updateBackground : function() {
+                        var bx = this.x / 3;
+                        var by = this.y / 3;
+                            
+                        this.$el.css({
+                            "background-position" : bx + "px " + by + "px"
+                        });
                     },
                     
                     onTouchmove : function(e) {
@@ -258,7 +297,9 @@
                             this.tilesDiv.css({
                                 "transform" : "translate(" + this.x + "px," + this.y + "px) scale(" + this.scale + ")",
                                 "transition-duration" : "unset"
-                            })
+                            });
+                            
+                            this.updateBackground();
                         }
                     },
                     
@@ -294,7 +335,9 @@
                         this.tilesDiv.css({
                             "transform" : "translate(" + this.x + "px," + this.y + "px) scale(" + this.scale + ")",
                             "transition-duration" : "none !important"
-                        })
+                        });
+                        
+                        this.updateBackground();
                     },
                     
                     onPinchstart : function(e) {
@@ -326,8 +369,9 @@
                         this.tilesDiv.css({
                             "transition-duration" : "unset",
                             "transform" : "translate(" + this.x + "px," + this.y + "px) scale(" + this.scale + ")",
-
-                        })
+                        });
+                        
+                        this.updateBackground();
                     },
                     
                     onTouchstart : function(e) {
@@ -371,16 +415,63 @@
 
                         this.addSector(sector);
                         
+                        var currentSector = Drift.getSector();
+                        
+                        var sectorTile = this.sectorTiles[currentSector.getId()];
+                        sectorTile.updateView();
+
+                        sectorTile = this.sectorTiles[currentSector.getId()];
+                        sectorTile.updateView();
+                        
                         this.highlightCurrentSector();
+                        
+                        this.showNeighboringSectors();
+                        
+                        this.centerOnCurrentSector();
+                    },
+                    
+                    onSectorSet : function(sector) {
+                        console.log("map:sectorset");
+                        if( this.isZoomed() ) {
+                            this.zoomOff();
+                        }
+
+                        this.addSector(sector);
+                        
+                        this.highlightCurrentSector();
+                        
+                        this.showNeighboringSectors();
+                        
+                        this.centerOnCurrentSector();
                     },
                     
                     highlightCurrentSector : function() {
                         var sector = Drift.getSector();
                         
-                        this.$el.find("polygon").removeClass("currentSector");
+                        if( sector ) {
+                            this.$el.find("polygon").removeClass("currentSector");
+                            
+                            var selector = "polygon[data-id=" + sector.getId() + "]";
+                            this.$el.find(selector).addClass("currentSector");
+                        }
+                    },
+                    
+                    showNeighboringSectors : function() {
+                        var self=this;
                         
-                        var selector = "polygon[data-id=" + sector.getId() + "]";
-                        this.$el.find(selector).addClass("currentSector");
+                        var currentSector = Drift.getSector();
+                        
+                        for( var index in Drift.Globals.Direction ) {
+                            var direction = Drift.Globals.Direction[index];
+                            var coords = currentSector.getNeighbor(direction);
+                            Drift.getSectorByXY(coords)
+                                .then(function(sector) {
+                                    self.addSector(sector);
+                                })
+                                .fail(function() {
+                                    console.log("getSectorByXY fail NYI")
+                                })
+                        }
                     },
                     
                     zoomOnSector : function(sectorId) {
@@ -461,8 +552,12 @@
                     zoomOff : function() {
                         console.log("map:zoomoff");
                         var sectorId = this.model.get("zoomedOn");
-                        var sectorTile = this.sectorTiles[sectorId];
-                        sectorTile.hideFeatures();
+                        if( sectorId ) {
+                            var sectorTile = this.sectorTiles[sectorId];
+                            if( sectorTile ) {
+                                sectorTile.hideFeatures();
+                            }
+                        }
                         
                         this.unlock();
                         this.model.set({

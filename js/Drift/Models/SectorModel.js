@@ -8,6 +8,8 @@
                         id : null,
                         x : null,
                         y : null,
+                        firstVisitedOn : null,
+                        lastVisitedOn : null,
                         ports : [],
                         planets : [],
                         resources : {}
@@ -26,6 +28,14 @@
                     
                     getY : function() {
                         return this.get("y");
+                    },
+                    
+                    isX : function(x) {
+                        return this.getX()==x;
+                    },
+                    
+                    isY : function(y) {
+                        return this.getY()==y;
                     },
                     
                     getPorts : function() {
@@ -104,7 +114,11 @@
                         y = this.get("y");
                         x += direction.x;
                         y += direction.y;
-                        return Drift.getSectorAt(x, y);
+                        return { x : x, y : y };
+                    },
+                    
+                    hasVisited : function() {
+                        return this.get("firstVisitedOn") != null;
                     }
                 })
             }

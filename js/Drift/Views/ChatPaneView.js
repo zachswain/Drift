@@ -20,6 +20,7 @@
                     onChatMessage : function(e) {
                         var div = $("<div></div>");
                         $(div).html(e.message);
+                        console.log(e);
                         this.$el.find("[data-role=Log]").append(div);
                         this.scrollToBottom();
                     },

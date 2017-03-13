@@ -8,8 +8,6 @@
                     
                     initialize : function(parameters) {
                         this.views = [];
-                        
-                        this.listenTo(Drift, "change:sector", this.onSectorChange);
                     },
                     
                     render : function() {
@@ -20,9 +18,8 @@
                         this.updateView();
                     },
                     
-                    onSectorChange : function(sector) {
+                    setSector : function(sector) {
                         this.sector = sector;
-                        this.updateView();
                     },
                     
                     clearPorts : function() {

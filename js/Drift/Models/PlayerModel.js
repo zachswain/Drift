@@ -9,6 +9,7 @@
                         sectorId : null,
                         planetId : null,
                         portId : null,
+                        sectors : {},
                         credits : 0,
                     },
                     
@@ -73,6 +74,10 @@
                         }
                     },
                     
+                    canMoveTo : function(sectorId) {
+                        return true;    
+                    },
+                    
                     getPortId : function() {
                         return this.get("portId");
                     },
@@ -103,6 +108,10 @@
                         });
                     },
                     
+                    getSectors : function() {
+                        return this.get("sectors");    
+                    },
+                    
                     getCredits : function() {
                         return this.get("credits");
                     },
@@ -130,6 +139,18 @@
                             credits : credits
                         });
                         return amount;
+                    },
+                    
+                    hasVisited : function(sectorId) {
+                        var sectors = this.getSectors();
+                        if( sectors.hasOwnProperty(sectorId) ) {
+                            var sector = sectors[sectorId];
+                            if( sector && sector.hasVisited() ) {
+                                return true;
+                            }
+                        }
+                        
+                        return false;
                     }
                 })
             }

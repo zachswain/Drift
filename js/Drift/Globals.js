@@ -13,11 +13,11 @@
                 },
                 Direction : {
                     NorthWest : { x : -1, y : 0 },
-                    North : { x : 0, y : -1 },
-                    NorthEast : { x : 1, y : -1 },
+                    North : { x : 0, y : 1 },
+                    NorthEast : { x : 1, y : 1 },
                     SouthEast : { x : 1, y : 0 },
-                    South : { x : 0, y : 1 },
-                    SouthWest : { x : -1, y : 1 }
+                    South : { x : 0, y : -1 },
+                    SouthWest : { x : -1, y : -1 }
                 },
                 SectorTile : {
                     width : 100,

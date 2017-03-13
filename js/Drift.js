@@ -21,6 +21,7 @@
                 Drift.Server.run();
             
                 this.listenTo(Drift.Server, "change:ticks", this.onTicksChange);
+                this.listenTo(Drift.Server, "move:sector", this.onSectorMove);
                 
                 var self=this;
             },
@@ -33,7 +34,6 @@
                 
                 Drift.Server.getPlayer()
                     .then(function(player) {
-                        console.log(player);
                         self.player.set(player);
                         
                         self.ship.attachModule(new Drift.ShipModules.CargoBay());
@@ -43,15 +43,15 @@
                         //this.ship.addBots(Drift.Bots.ScrapCollectors, 1);
                         //this.ship.addBots(Drift.Bots.PlanetaryMiners, 5);
                         
+                        self.view = new Drift.Views.MainView();
+                        self.view.render();
+                        $("body").append(self.view.$el);
+                        
                         self.setSector(self.player.getSectorId())
                             .then(function() {
                                 self.sendMessage({
                                     message : "Drift running"
                                 });
-                                
-                                self.view = new Drift.Views.MainView();
-                                self.view.render();
-                                $("body").append(self.view.$el);
                             })
                             .fail(function() {
                                 console.log("set sector failed NYI");
@@ -63,7 +63,7 @@
             },
             
             sendMessage : function(msg) {
-                this.trigger("chatMessage", msg);  
+                this.trigger("chatMessage", { message : msg });  
             },
             
             setSector : function(sectorId) {
@@ -71,13 +71,22 @@
                 
                 var self=this;
                 Drift.getSectorById(sectorId).then(function(sector) {
-                    self.player.setSectorId(sector.getId());
-                    self.sector = sector;
-                    self.trigger("change:sector", self.sector);
-                    promise.resolve();
+                    Drift.Server.setSector(sectorId)
+                        .then(function() {
+                            self.player.setSectorId(sector.getId());
+                            self.sector = sector;
+                            self.trigger("set:sector", self.sector);
+                            promise.resolve();
+                        });
                 });
                 
                 return promise.promise();
+            },
+            
+            onSectorMove : function(sectorJson) {
+                console.log("onsectormove");
+                this.sector = new Drift.Models.SectorModel(sectorJson);
+                this.trigger("change:sector", this.sector);
             },
             
             getSector : function() {
@@ -166,19 +175,23 @@
                 return promise.promise();
             },
             
+            getSectorByXY : function(coords) {
+                return Drift.Server.getSectorByXY(coords);
+            },
+            
             getPortById : function(id) {
                 return Drift.Ports[id];
             },
             
             moveToSector : function(sectorId) {
                 var self=this;
-                this.getSectorById(sectorId)
-                .then(function(sector) {
-                    self.setSector(sectorId);
-                })
-                .fail(function(err) {
-                    console.log("failed moving for unknown reason");
-                });
+                Drift.Server.moveToSector(sectorId)
+                    .then(function() {
+                        console.log("successfully moved to sector " + sectorId + ", watch for trigger");
+                    })
+                    .fail(function() {
+                        console.log("moveToSector fail NYI");
+                    });
             },
             
             onTicksChange : function(ticks) {

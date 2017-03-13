@@ -40,8 +40,6 @@ header("Pragma: no-cache");
 <script src="js/Drift/Views/SectorContentPaneView.js" type="text/javascript"></script>
 <script src="js/Drift/Views/PortsContentPaneView.js" type="text/javascript"></script>
 <script src="js/Drift/Views/PlanetsContentPaneView.js" type="text/javascript"></script>
-<script src="js/Drift/Views/SectorMapView.js" type="text/javascript"></script>
-<script src="js/Drift/Views/MapContentPaneView.js" type="text/javascript"></script>
 <script src="js/Drift/Views/MapView.js" type="text/javascript"></script>
 <script src="js/Drift/Views/SectorTileView.js" type="text/javascript"></script>
 <script src="js/Drift/Views/PortView.js" type="text/javascript"></script>
@@ -53,13 +51,15 @@ header("Pragma: no-cache");
 
 <script type="text/template" id="Drift-MainView-template">
     <div class="StatsViewContainer" data-role="statsViewContainer"></div>
+    <div class="MainViewMapContainer" data-role="mapViewContainer">
+    </div>
     <div class="MainViewContentContainer">
         <div class="MainViewTabBar">
             <ul class="MainViewTabBarList">
             <li class="Tab"><button class="Button" data-role="resourcesTabBtn">R</button></li>
             <li class="Tab"><button class="Button" data-role="shipTabBtn">Sh</button></li>
             <li class="Tab"><button class="Button" data-role="personnelTabBtn">P</button></li>
-            <li class="Tab"><button class="Button" data-role="mapTabBtn">M</button></li>
+            <li class="Tab"><button class="Button" data-role="sectorTabBtn">S</button></li>
             </ul>
         </div>
         <div class="MainViewTabContent" data-role="mainViewTabContent">
@@ -116,7 +116,7 @@ header("Pragma: no-cache");
 
 <script type="text/template" id="Drift-SectorContentPaneView-template">
     <div>
-    Sector: <span data-role="sectorIdSpan"><%= sector.id %></span>
+    Sector: <span data-role="sectorIdSpan"></span>
     </div>
     <div class="SectorLocationTabBar">
         <ul class="SectorLocationList">
@@ -125,8 +125,6 @@ header("Pragma: no-cache");
         </ul>
     </div>
     <div class="SectorContentPaneTabContent" data-role="sectorLocationTabContent">
-    </div>
-    <div class="SectorMapContainer" data-role="sectorMapContainer">
     </div>
 </script>
 
@@ -252,7 +250,7 @@ header("Pragma: no-cache");
 </script>
 
 <script type="text/template" id="Drift-ChatPaneView-template">
-    <div data-role="Log">
+    <div class="Log" data-role="Log">
     </div>
 </script>
 

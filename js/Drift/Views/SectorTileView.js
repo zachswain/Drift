@@ -97,9 +97,10 @@
                     
                     updateView : function() {
                         var self=this;
+                        var player = Drift.getPlayer();
                         var svg = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="' + this.getWidth() + '" height="' + this.getHeight() + '" viewbox="0 0 ' + Drift.Globals.SectorTile.viewBoxWidth + ' ' + Drift.Globals.SectorTile.viewBoxHeight + '" xmlns:xlink="http://www.w3.org/1999/xlink">';
                         svg += '<g>';
-                        svg += '<polygon class="SectorTileHex" data-type="SectorTile" data-id="' + this.sector.getId() + '" data-x="' + this.sector.getX() + '" data-y="' + this.sector.getY() + '" points="300,150 225,280 75,280 0,150 75,20 225,20" ></polygon>';
+                        svg += '<polygon class="SectorTileHex ' + (player.hasVisited(this.sector.getId()) ? ' Visited' : ' Unvisited') + '" data-type="SectorTile" data-id="' + this.sector.getId() + '" data-x="' + this.sector.getX() + '" data-y="' + this.sector.getY() + '" points="300,150 225,280 75,280 0,150 75,20 225,20" ></polygon>';
                         svg += '<text data-role="id" x="50%" y="50%" alignment-baseline="middle" text-anchor="middle" font-family="Verdana" font-size="35" fill="blue">' + this.sector.getId() + '</text>';
                         svg += '<circle class="Feature Star" cx="150" cy="150" r="10"/>';
                         
@@ -135,28 +136,22 @@
                             self.$el.html(svg);
                             
                             setTimeout(function() {
-                                // var hammertime = new Hammer(self.$el[0], {});
-                            
-                                // hammertime.on("tap", function(e) {
-                                //   self.onTap(e);
-                                // });
-                                
-                                // hammertime.on("press", function(e) {
-                                //     self.onPress(e);
-                                // });
-                                
-                                var hammer = new Hammer.Manager(self.$el[0], {});
+                                if( self.hammer ) {
+                                    self.hammer.stop(true);
+                                    self.hammer.destroy();
+                                }
+                                self.hammer = new Hammer.Manager(self.$el[0], {});
                                 
                                 var singleTap = new Hammer.Tap({ event: 'singletap' });
                                 var doubleTap = new Hammer.Tap({event: 'doubletap', taps: 2 });
                                 
-                                hammer.add([doubleTap, singleTap]);
+                                self.hammer.add([doubleTap, singleTap]);
                                 
                                 doubleTap.recognizeWith(singleTap);
                                 
                                 singleTap.requireFailure([doubleTap]);
                                 
-                                hammer.on("tap singletap doubletap", function(e) {
+                                self.hammer.on("tap singletap doubletap", function(e) {
                                     self.onTap(e);
                                 });
                             });
@@ -196,6 +191,7 @@
                     },
                     
                     onTapped : function(e) {
+                        console.log(e);
                         if( e.tapCount>=2 ) {
                             console.log("tile:doubletap");
                             this.trigger("doubletap", e);

@@ -12,23 +12,18 @@
                     },
                     
                     initialize : function(parameters) {
-                        this.sector = Drift.getSector();
-
                         this.views = {
                             PortsContentPaneView : new Drift.Views.PortsContentPaneView(),
-                            PlanetsContentPaneView : new Drift.Views.PlanetsContentPaneView(),
-                            SectorMapView : new Drift.Views.SectorMapView({
-                                sectors : [ ]
-                            })
+                            PlanetsContentPaneView : new Drift.Views.PlanetsContentPaneView()
                         };
                         
                         this.listenTo(Drift, "change:sector", this.onSectorChange);
-                        this.listenTo(this.views.SectorMapView, "doubletap:sector", this.onSectorDoubleTapped)
+                        this.listenTo(Drift, "show:sector", this.onSectorShow);
                     },
                     
                     render : function() {
                         var template = _.template( $("#Drift-SectorContentPaneView-template").html() );
-                        var html = template({ sector : this.sector.toJSON() });
+                        var html = template();
                         this.$el.html(html);
                         
                         var self=this;
@@ -39,23 +34,17 @@
                             
                             self.views.PlanetsContentPaneView.render();
                             self.$el.find("[data-role=sectorLocationTabContent]").append(self.views.PlanetsContentPaneView.$el);
-                            
-                            self.views.SectorMapView.render();
-                            self.$el.find("[data-role=sectorMapContainer]").append(self.views.SectorMapView.$el);
-                            
+
                             self.showPortsTab();
                         }, 0);
                     },
                     
-                    onSectorDoubleTapped : function(sectorId) {
-                        console.log("moving to " + sectorId);
-                        
-                        Drift.moveToSector(sectorId);
+                    onSectorChange : function(sector) {
+                        //this.updateView();
                     },
                     
-                    onSectorChange : function(sector) {
-                        this.sector = sector;
-                        this.updateView();
+                    onSectorShow : function(sector) {
+                        this.$el.find("[data-role=sectorIdSpan]").html(sector.get("id"));
                     },
                     
                     onPortsTabBtnClicked : function(e) {
@@ -80,6 +69,23 @@
                     
                     updateView : function() {
                         this.$el.find("[data-role=sectorIdSpan]").html(this.sector.get("id"));
+                        this.views.PlanetsContentPaneView.updateView();
+                        this.views.PortsContentPaneView.updateView();
+                    },
+                    
+                    showSector : function(sectorId) {
+                        var self=this;
+                        
+                        Drift.getSectorById(sectorId)
+                            .then(function(sector) {
+                                self.sector = sector;
+                                self.views.PortsContentPaneView.setSector(self.sector);
+                                self.views.PlanetsContentPaneView.setSector(self.sector);
+                                self.updateView();
+                            })
+                            .fail(function() {
+                                
+                            });
                     }
                 })
             }
